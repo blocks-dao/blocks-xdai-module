@@ -3,13 +3,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 300px;
+  margin-top: 60px;
   background-color: #171717;
 }
 
 .container strong {
   font-size: 20px;
   line-height: 26px;
+  margin-bottom: 20px;
 }
 
 .container .upload-image {
@@ -18,6 +19,48 @@
   max-width: 200px; 
 }
 
-.container .button-choose {
+.button-choose {
+  width: 350px;
+  margin: auto;
   margin-top: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+@media screen and (max-width: 750px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+}
+
+input {
+  display: block;
+  margin: auto;
+  width: 400px;
+  height: 35px;
+  border-radius: 5px;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.segment {
+  color: var(--ion-color-danger);
+  margin: 40px;
+}
+
+.segment:hover {
+  color: #ffffff;
+  background-color: var(--ion-color-light);
+  border-radius: 5px;
+}
+
+.footer {
+  height:100px;
 }
