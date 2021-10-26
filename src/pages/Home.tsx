@@ -19,7 +19,7 @@ const Home: React.FC = () => {
           <IonTitle>
             <img className="logo" src={logo} />
           </IonTitle>
-          <IonButton size="small" className="btn" color="danger" slot="end" onClick={onVerify}>Verify</IonButton>
+          <IonButton size="small" className="btn" color="danger" slot="end" onClick={onVerify}>Track/Claim</IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent color="dark" fullscreen>

@@ -1,109 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import './VerifyContainer.css';
-import Web3 from "web3";
-import * as web3Utils from "web3-utils";
 import { IonButton } from '@ionic/react';
 
 declare const window: any;
-
-const web3 = new Web3('https://rpc.xdaichain.com');
 
 interface ContainerProps { }
 
 const VerifyContainer: React.FC<ContainerProps> = () => {
 
-  const currentHash = localStorage.getItem('hash');
-  const [blocksHash, setBlocksHash] = useState("");
-  const [transaction, setTransaction] = useState("");
-  
-  const onChange = async (data: any) => {
-    if (data) {
-      console.log(data.target.value)
-      setTransaction(data.target.value);
+  const [network, setNetwork] = useState("");
+  const [currentHash, setCurrentHash] = useState(localStorage.getItem("bridgeTransaction"));
+  const [splitHash, setSplitHash] = useState("");
+
+  const generateUrl = () => {
+    let temp: any = currentHash?.split(":");
+    if (temp[0] === 'ethereum'){
+      setNetwork("1");
+      setSplitHash(temp[1]);
+    } else {
+      setNetwork("100");
+      setSplitHash(temp[0])
     }
   }
 
-  const getLogData = (decode: any) => {
-      //We need to decode the transaction logs to get the data. This requires the abi of the "send" function, the data and transaction topics. These are passed in as a result of fetching the transaction.
-      let result: any = web3.eth.abi.decodeLog([{
-        'type':'address',
-        'name':'operator',
-        'indexed': true
-      }, {
-        'type':'address',
-        'name':'from',
-        'indexed': true
-      },{
-        'type':'address',
-        'name': 'to',
-        'indexed': true
-      },{
-        'type': 'uint256',
-        'name':'amount'
-      },{
-        'type': 'bytes',
-        'name':'data'
-      },{
-        'type': 'bytes',
-        'name':'operatorData'
-      }],decode.logs[0].data, decode.logs[0].topics.slice(1));
-      return result;
-  }
-
-  const fetchBlocksTransaction = async(tx: string) => {
-    // let web3 = new Web3(window.ethereum);
-
-    //Fetch the transaction id using web3. Insert the transaction id that contains BLOCKS data.
-    web3.eth.getTransactionReceipt(tx).then(async(res:any) => {
-        console.log(res)
-      //Call a function to decode the transaction logs, see below.
-      let details = await getLogData(res);
-        console.log(details.data)
-
-        //Use web3 Utils to convert the hex data to human-readable data.
-        let message = web3Utils.hexToAscii(details.data);
-        setBlocksHash(message);
-        alert(message);
-      });
+  const viewTransaction = () => {
+    window.open(`https://alm-xdai.herokuapp.com/${network}/${splitHash}`);
   }
 
   const clear = () => {
-    setBlocksHash("");
-    setTransaction("");
-    localStorage.setItem('hash', "");
+    localStorage.setItem('bridgeTransaction', "");
   }
 
   useEffect(() => {
-      if(transaction){
-        fetchBlocksTransaction(transaction);
-      }
-  }, [transaction]);
+    if (currentHash) {
+      generateUrl();
+    }
+  }, []);
 
   return (
     <>
       <div className="container">
-        <strong>Asset Verification Test</strong>
-        <input type='text' placeholder="Paste BLOCKS Transaction ID" value={transaction} onChange={onChange}/>
+        <strong>Check Bridge Transfer Status</strong>
         {currentHash &&
-          <p className="tx">Stored File Hash: {currentHash}</p>
+          <>
+          <p className="tx">Transaction Id: {splitHash}</p>
+          <IonButton color="danger" size="small" onClick={viewTransaction}>Execute On ABM Live Monitoring Tool</IonButton>
+          <a href="https://docs.tokenbridge.net/about-tokenbridge/components/amb-live-monitoring-application" target="_blank">See TokenBridge Docs</a>
+          </>
         }
         <br />
-        {blocksHash &&
-          <p className="tx">Blockchain File Hash: {blocksHash}</p>
-        }
-        <br />
-        { blocksHash &&
-            <div>
-               {(blocksHash && currentHash) && (blocksHash === currentHash) ? (
-                        <p className="tx">VERIFIED! ✅</p>
-                    ):(
-                        <p className="tx">NOT VERIFIED! ⛔️</p>
-                    )
-               }
-               <IonButton color="danger" size="small" onClick={clear}>CLEAR</IonButton>
-            </div>
-        }
-        <br />
+          <IonButton color="danger" size="small" onClick={clear}>CLEAR</IonButton>
       </div>
     </>
   );

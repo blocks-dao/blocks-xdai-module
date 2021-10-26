@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { IonButton, IonSegment, IonSegmentButton, IonLabel, IonFooter, IonToolbar } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { IonButton, IonSegment, IonSegmentButton, IonLabel } from '@ionic/react';
 import './ExploreContainer.css';
 import {ethers} from "ethers";
 import BigNumber from "bignumber.js";
-import * as md5 from "js-md5";
 import * as web3Utils from "web3-utils";
 import blocksData from "../blocksDetails";
 
@@ -14,19 +13,11 @@ interface ContainerProps { }
 
 const ExploreContainer: React.FC<ContainerProps> = () => {
 
-  // const [file, setFile] = useState("");
-  // const [viewHash, setHash] = useState("");
   const [tokenContract, setTokenContract] = useState(blocksData.blocksAddress);
   const [bridgeContract, setBridgeContract] = useState(blocksData.ethToXdaiBridge);
   const [amount, setAmount] = useState(0);
   const [network, setNetwork] = useState("");
   const [address, setAddress] = useState("");
-  // const onChange = async (e: any) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setViewFile(URL.createObjectURL(e.target.files[0]))
-  //     setFile(e.target.files[0])
-  //   }
-  // }
 
   const onAmount = async (e: any) => {
     setAmount(e.target.value);
@@ -158,7 +149,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     }
   }
 
-  const addxDaiToMetamask = async() => {
+  const addxDaiNetworkToMetamask = async() => {
       try {
         // check if the chain to connect to is installed
         await window.ethereum.request({
@@ -218,28 +209,32 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       //let amountAdjusted = Number(web3Utils.toWei(amount.toString(), "ether"))
       let amountAdjusted = new BigNumber(Number(web3Utils.toWei(amount.toString(), "ether")));
       console.log(amountAdjusted.toFixed())
-
+      // Approve token contract to spend tokens being sent across the bridge
       contractSigner.approve(tokenContract, amountAdjusted.toFixed()).then((tx: any)=>{
         if(tx){
           //View the transaction response and get the transaction hash
           console.log(tx)
           alert(tx.hash);
           if(network === 'ethereum'){
+            //Call to the 
             omniContractSigner.relayTokens(bridgeContract, address, amountAdjusted.toFixed()).then((tx: any)=>{
               if(tx){
                //View the transaction response and get the transaction hash
-                console.log(tx)
+                localStorage.setItem("bridgeTransaction", `${network}:${tx.hash}`);
                 alert(tx.hash);
+                setAmount(0);
               }
             }).catch((e: any) => {
               alert(e.message);
             });
           } else {
+            //Call to XDai Bridge contract
             contractSigner.transferAndCall(bridgeContract, amountAdjusted.toFixed(), 0x00).then((tx: any)=>{
               if(tx){
                //View the transaction response and get the transaction hash
-                console.log(tx)
+                localStorage.setItem("bridgeTransaction", `${network}:${tx.hash}`)
                 alert(tx.hash);
+                setAmount(0);
               }
             }).catch((e: any) => {
               alert(e.message);
@@ -297,7 +292,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
           className="button-choose"
           color="danger"
           fill="outline"
-          onClick={addxDaiToMetamask}>Add xDai Network to Metamask</IonButton>
+          onClick={addxDaiNetworkToMetamask}>Add xDai Network to Metamask</IonButton>
       </div>  
       <div className="container">
         <strong>BLOCKS Metamask Helpers</strong>

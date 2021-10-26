@@ -1,17 +1,16 @@
-# BLOCKS Verification Module
+# BLOCKS xDAI Module
 
-This proof of concept application creates a unique hash for uploaded files. This hash is stored in local storage and immutably on BLOCKS. The hashes can be compared to determine authenticity or modifications to a file.
+This application interacts with the xDAI OmbiBridge to port BLOCKS between networks. You can migrate BLOCKS from ETH to xDAI and back again. 
 
-# Use Cases for BLOCKS Verification Tools
+# Use Cases for BLOCKS on xDAI
 
-- Data security and verification tools
-- Immutable data storage
+- Fast and extremely low-cost BLOCKS transactions for P2P
+- BLOCKS compatibility with DeFi applications on xDAI
 
 ## Project Notes:
-- Project is set up for ETH mainnet
+- Project interacts with Ethereum mainnet and xDAI mainnet
 - Metamask is used as the provider to sign transactions
-- Infura is used to connect to ETH for fetching/parsing data 
-(manually change the Infura url for Rinkeby testing from "mainnet.infura.io" to "rinkeby.infura.io"
+- Bridging back to ETH from xDAI requires a manual execution on the [ABM Live Monitoring Tool](https://docs.tokenbridge.net/about-tokenbridge/components/amb-live-monitoring-application)
 
 ## Live Demo
 
