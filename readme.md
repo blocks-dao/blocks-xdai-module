@@ -34,7 +34,7 @@ ionic serve
 
 ## Have Fun
 
-Have fun exploring and building verification tools with BLOCKS.
+Have fun moving BLOCKS between networks!
 
 
 ## License
