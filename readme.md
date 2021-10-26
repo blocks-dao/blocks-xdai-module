@@ -14,7 +14,7 @@ This application interacts with the xDAI OmbiBridge to port BLOCKS between netwo
 
 ## Live Demo
 
-[BLOCKS Verification Web App](https://blocks-verification.web.app/home)
+[BLOCKS Bridge Web App](https://blocks-bridge.web.app/home)
 
 ## Running Locally
 The app is built with ReactJs and Ionic Framework
